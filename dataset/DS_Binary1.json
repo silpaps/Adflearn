@@ -1,0 +1,19 @@
+{
+	"name": "DS_Binary1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_Binary1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "chat.txt",
+				"container": "input"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
