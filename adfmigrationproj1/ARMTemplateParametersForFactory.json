@@ -1,0 +1,87 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adfmigrationproj1"
+		},
+		"DS_OUTPUT_Binary1_accountKey": {
+			"value": ""
+		},
+		"DS_output_csv_parque_accountKey": {
+			"value": ""
+		},
+		"LS_Binary1_connectionString": {
+			"value": ""
+		},
+		"LS_Blobstorage_lookup_connectionString": {
+			"value": ""
+		},
+		"LS_MULTIPLECSVS_connectionString": {
+			"value": ""
+		},
+		"LS_SQL_to_ADLS_Parquet_accountKey": {
+			"value": ""
+		},
+		"LS_getmetadata_sales_accountKey": {
+			"value": ""
+		},
+		"LS_input_blob_adls_connectionString": {
+			"value": ""
+		},
+		"LS_onprem_adls_accountKey": {
+			"value": ""
+		},
+		"LS_output_multiplecsvs_accountKey": {
+			"value": ""
+		},
+		"SqlServer1_password": {
+			"value": ""
+		},
+		"ls_SqlServer2_password": {
+			"value": ""
+		},
+		"ls_onprem_sql_accountKey": {
+			"value": ""
+		},
+		"DS_OUTPUT_Binary1_properties_typeProperties_url": {
+			"value": "https://adlsdevmigration.dfs.core.windows.net/"
+		},
+		"DS_output_csv_parque_properties_typeProperties_url": {
+			"value": "https://adlsdevmigration.dfs.core.windows.net/"
+		},
+		"LS_SQL_to_ADLS_Parquet_properties_typeProperties_url": {
+			"value": "https://adlsdevmigration.dfs.core.windows.net/"
+		},
+		"LS_getmetadata_sales_properties_typeProperties_url": {
+			"value": "https://adlsdevmigration.dfs.core.windows.net/"
+		},
+		"LS_onprem_adls_properties_typeProperties_url": {
+			"value": "https://adlsdevmigration.dfs.core.windows.net/"
+		},
+		"LS_output_multiplecsvs_properties_typeProperties_url": {
+			"value": "https://adlsdevmigration.dfs.core.windows.net/"
+		},
+		"SqlServer1_properties_typeProperties_server": {
+			"value": "SILPA\\SQLEXPRESS"
+		},
+		"SqlServer1_properties_typeProperties_database": {
+			"value": "MyDatabase"
+		},
+		"SqlServer1_properties_typeProperties_userName": {
+			"value": "SILPA"
+		},
+		"ls_SqlServer2_properties_typeProperties_server": {
+			"value": "SILPA\\SQLEXPRESS"
+		},
+		"ls_SqlServer2_properties_typeProperties_database": {
+			"value": "SalesDB"
+		},
+		"ls_SqlServer2_properties_typeProperties_userName": {
+			"value": "SILPA"
+		},
+		"ls_onprem_sql_properties_typeProperties_url": {
+			"value": "https://adlsdevmigration.dfs.core.windows.net/"
+		}
+	}
+}

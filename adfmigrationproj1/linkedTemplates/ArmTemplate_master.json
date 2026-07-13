@@ -1,0 +1,244 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adfmigrationproj1"
+		},
+		"DS_OUTPUT_Binary1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'DS_OUTPUT_Binary1'"
+		},
+		"DS_output_csv_parque_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'DS_output_csv_parque'"
+		},
+		"LS_Binary1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_Binary1'"
+		},
+		"LS_Blobstorage_lookup_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_Blobstorage_lookup'"
+		},
+		"LS_MULTIPLECSVS_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_MULTIPLECSVS'"
+		},
+		"LS_SQL_to_ADLS_Parquet_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'LS_SQL_to_ADLS_Parquet'"
+		},
+		"LS_getmetadata_sales_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'LS_getmetadata_sales'"
+		},
+		"LS_input_blob_adls_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_input_blob_adls'"
+		},
+		"LS_onprem_adls_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'LS_onprem_adls'"
+		},
+		"LS_output_multiplecsvs_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'LS_output_multiplecsvs'"
+		},
+		"SqlServer1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SqlServer1'"
+		},
+		"ls_SqlServer2_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_SqlServer2'"
+		},
+		"ls_onprem_sql_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ls_onprem_sql'"
+		},
+		"DS_OUTPUT_Binary1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsdevmigration.dfs.core.windows.net/"
+		},
+		"DS_output_csv_parque_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsdevmigration.dfs.core.windows.net/"
+		},
+		"LS_SQL_to_ADLS_Parquet_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsdevmigration.dfs.core.windows.net/"
+		},
+		"LS_getmetadata_sales_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsdevmigration.dfs.core.windows.net/"
+		},
+		"LS_onprem_adls_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsdevmigration.dfs.core.windows.net/"
+		},
+		"LS_output_multiplecsvs_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsdevmigration.dfs.core.windows.net/"
+		},
+		"SqlServer1_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "SILPA\\SQLEXPRESS"
+		},
+		"SqlServer1_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "MyDatabase"
+		},
+		"SqlServer1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "SILPA"
+		},
+		"ls_SqlServer2_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "SILPA\\SQLEXPRESS"
+		},
+		"ls_SqlServer2_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "SalesDB"
+		},
+		"ls_SqlServer2_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "SILPA"
+		},
+		"ls_onprem_sql_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsdevmigration.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "adfmigrationproj1_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"DS_OUTPUT_Binary1_accountKey": {
+						"value": "[parameters('DS_OUTPUT_Binary1_accountKey')]"
+					},
+					"DS_output_csv_parque_accountKey": {
+						"value": "[parameters('DS_output_csv_parque_accountKey')]"
+					},
+					"LS_Binary1_connectionString": {
+						"value": "[parameters('LS_Binary1_connectionString')]"
+					},
+					"LS_Blobstorage_lookup_connectionString": {
+						"value": "[parameters('LS_Blobstorage_lookup_connectionString')]"
+					},
+					"LS_MULTIPLECSVS_connectionString": {
+						"value": "[parameters('LS_MULTIPLECSVS_connectionString')]"
+					},
+					"LS_getmetadata_sales_accountKey": {
+						"value": "[parameters('LS_getmetadata_sales_accountKey')]"
+					},
+					"LS_input_blob_adls_connectionString": {
+						"value": "[parameters('LS_input_blob_adls_connectionString')]"
+					},
+					"LS_output_multiplecsvs_accountKey": {
+						"value": "[parameters('LS_output_multiplecsvs_accountKey')]"
+					},
+					"LS_SQL_to_ADLS_Parquet_accountKey": {
+						"value": "[parameters('LS_SQL_to_ADLS_Parquet_accountKey')]"
+					},
+					"LS_onprem_adls_accountKey": {
+						"value": "[parameters('LS_onprem_adls_accountKey')]"
+					},
+					"SqlServer1_password": {
+						"value": "[parameters('SqlServer1_password')]"
+					},
+					"ls_SqlServer2_password": {
+						"value": "[parameters('ls_SqlServer2_password')]"
+					},
+					"ls_onprem_sql_accountKey": {
+						"value": "[parameters('ls_onprem_sql_accountKey')]"
+					},
+					"DS_OUTPUT_Binary1_properties_typeProperties_url": {
+						"value": "[parameters('DS_OUTPUT_Binary1_properties_typeProperties_url')]"
+					},
+					"DS_output_csv_parque_properties_typeProperties_url": {
+						"value": "[parameters('DS_output_csv_parque_properties_typeProperties_url')]"
+					},
+					"LS_getmetadata_sales_properties_typeProperties_url": {
+						"value": "[parameters('LS_getmetadata_sales_properties_typeProperties_url')]"
+					},
+					"LS_output_multiplecsvs_properties_typeProperties_url": {
+						"value": "[parameters('LS_output_multiplecsvs_properties_typeProperties_url')]"
+					},
+					"LS_SQL_to_ADLS_Parquet_properties_typeProperties_url": {
+						"value": "[parameters('LS_SQL_to_ADLS_Parquet_properties_typeProperties_url')]"
+					},
+					"LS_onprem_adls_properties_typeProperties_url": {
+						"value": "[parameters('LS_onprem_adls_properties_typeProperties_url')]"
+					},
+					"SqlServer1_properties_typeProperties_server": {
+						"value": "[parameters('SqlServer1_properties_typeProperties_server')]"
+					},
+					"SqlServer1_properties_typeProperties_database": {
+						"value": "[parameters('SqlServer1_properties_typeProperties_database')]"
+					},
+					"SqlServer1_properties_typeProperties_userName": {
+						"value": "[parameters('SqlServer1_properties_typeProperties_userName')]"
+					},
+					"ls_SqlServer2_properties_typeProperties_server": {
+						"value": "[parameters('ls_SqlServer2_properties_typeProperties_server')]"
+					},
+					"ls_SqlServer2_properties_typeProperties_database": {
+						"value": "[parameters('ls_SqlServer2_properties_typeProperties_database')]"
+					},
+					"ls_SqlServer2_properties_typeProperties_userName": {
+						"value": "[parameters('ls_SqlServer2_properties_typeProperties_userName')]"
+					},
+					"ls_onprem_sql_properties_typeProperties_url": {
+						"value": "[parameters('ls_onprem_sql_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "adfmigrationproj1_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adfmigrationproj1_ArmTemplate_0')]"
+			]
+		}
+	]
+}
