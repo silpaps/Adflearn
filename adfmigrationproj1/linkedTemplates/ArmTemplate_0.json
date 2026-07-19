@@ -39,6 +39,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'LS_output_multiplecsvs'"
 		},
+		"adls_linked_salesdata_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'adls_linked_salesdata'"
+		},
 		"LS_SQL_to_ADLS_Parquet_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'LS_SQL_to_ADLS_Parquet'"
@@ -46,18 +50,6 @@
 		"LS_onprem_adls_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'LS_onprem_adls'"
-		},
-		"SqlServer1_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'SqlServer1'"
-		},
-		"ls_SqlServer2_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'ls_SqlServer2'"
-		},
-		"ls_onprem_sql_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'ls_onprem_sql'"
 		},
 		"DS_OUTPUT_Binary1_properties_typeProperties_url": {
 			"type": "string",
@@ -75,39 +67,15 @@
 			"type": "string",
 			"defaultValue": "https://adlsdevmigration.dfs.core.windows.net/"
 		},
+		"adls_linked_salesdata_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsdevmigration.dfs.core.windows.net/"
+		},
 		"LS_SQL_to_ADLS_Parquet_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adlsdevmigration.dfs.core.windows.net/"
 		},
 		"LS_onprem_adls_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://adlsdevmigration.dfs.core.windows.net/"
-		},
-		"SqlServer1_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "SILPA\\SQLEXPRESS"
-		},
-		"SqlServer1_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "MyDatabase"
-		},
-		"SqlServer1_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "SILPA"
-		},
-		"ls_SqlServer2_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "SILPA\\SQLEXPRESS"
-		},
-		"ls_SqlServer2_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "SalesDB"
-		},
-		"ls_SqlServer2_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "SILPA"
-		},
-		"ls_onprem_sql_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adlsdevmigration.dfs.core.windows.net/"
 		}
@@ -237,6 +205,23 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/adls_linked_salesdata')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('adls_linked_salesdata_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('adls_linked_salesdata_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/integrationRuntime1')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
@@ -354,6 +339,51 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_Blobstorage_lookup",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"p_file_name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().p_file_name",
+							"type": "Expression"
+						},
+						"container": "csvdata"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "SIC_Code",
+						"type": "String"
+					},
+					{
+						"name": "Description",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_Blobstorage_lookup')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/LS_OUTPUT_Binary1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -373,6 +403,69 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/DS_OUTPUT_Binary1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/adf_sink')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adls_linked_salesdata",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"p_file_name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().p_file_name",
+							"type": "Expression"
+						},
+						"fileSystem": "salesdata"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/adls_linked_salesdata')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/input_csv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_MULTIPLECSVS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "csvdata"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_MULTIPLECSVS')]"
 			]
 		},
 		{
@@ -419,149 +512,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SqlServer1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"server": "[parameters('SqlServer1_properties_typeProperties_server')]",
-					"database": "[parameters('SqlServer1_properties_typeProperties_database')]",
-					"encrypt": "mandatory",
-					"trustServerCertificate": true,
-					"authenticationType": "SQL",
-					"userName": "[parameters('SqlServer1_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('SqlServer1_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime1",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ls_SqlServer2')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"server": "[parameters('ls_SqlServer2_properties_typeProperties_server')]",
-					"database": "[parameters('ls_SqlServer2_properties_typeProperties_database')]",
-					"encrypt": "optional",
-					"trustServerCertificate": false,
-					"authenticationType": "SQL",
-					"userName": "[parameters('ls_SqlServer2_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('ls_SqlServer2_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime1",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ls_onprem_sql')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('ls_onprem_sql_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('ls_onprem_sql_accountKey')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "integrationRuntime1",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_Blob_Adls')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "COPY_BLOB_TXT_ADLS",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "DS_Binary1",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "LS_OUTPUT_Binary1",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2026-07-05T11:12:07Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DS_Binary1')]",
-				"[concat(variables('factoryId'), '/datasets/LS_OUTPUT_Binary1')]"
 			]
 		}
 	]

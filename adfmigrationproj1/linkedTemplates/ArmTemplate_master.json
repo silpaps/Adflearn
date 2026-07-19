@@ -51,6 +51,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'SqlServer1'"
 		},
+		"adls_linked_salesdata_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'adls_linked_salesdata'"
+		},
 		"ls_SqlServer2_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'ls_SqlServer2'"
@@ -94,6 +98,10 @@
 		"SqlServer1_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "SILPA"
+		},
+		"adls_linked_salesdata_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsdevmigration.dfs.core.windows.net/"
 		},
 		"ls_SqlServer2_properties_typeProperties_server": {
 			"type": "string",
@@ -162,20 +170,14 @@
 					"LS_output_multiplecsvs_accountKey": {
 						"value": "[parameters('LS_output_multiplecsvs_accountKey')]"
 					},
+					"adls_linked_salesdata_accountKey": {
+						"value": "[parameters('adls_linked_salesdata_accountKey')]"
+					},
 					"LS_SQL_to_ADLS_Parquet_accountKey": {
 						"value": "[parameters('LS_SQL_to_ADLS_Parquet_accountKey')]"
 					},
 					"LS_onprem_adls_accountKey": {
 						"value": "[parameters('LS_onprem_adls_accountKey')]"
-					},
-					"SqlServer1_password": {
-						"value": "[parameters('SqlServer1_password')]"
-					},
-					"ls_SqlServer2_password": {
-						"value": "[parameters('ls_SqlServer2_password')]"
-					},
-					"ls_onprem_sql_accountKey": {
-						"value": "[parameters('ls_onprem_sql_accountKey')]"
 					},
 					"DS_OUTPUT_Binary1_properties_typeProperties_url": {
 						"value": "[parameters('DS_OUTPUT_Binary1_properties_typeProperties_url')]"
@@ -189,11 +191,41 @@
 					"LS_output_multiplecsvs_properties_typeProperties_url": {
 						"value": "[parameters('LS_output_multiplecsvs_properties_typeProperties_url')]"
 					},
+					"adls_linked_salesdata_properties_typeProperties_url": {
+						"value": "[parameters('adls_linked_salesdata_properties_typeProperties_url')]"
+					},
 					"LS_SQL_to_ADLS_Parquet_properties_typeProperties_url": {
 						"value": "[parameters('LS_SQL_to_ADLS_Parquet_properties_typeProperties_url')]"
 					},
 					"LS_onprem_adls_properties_typeProperties_url": {
 						"value": "[parameters('LS_onprem_adls_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "adfmigrationproj1_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"SqlServer1_password": {
+						"value": "[parameters('SqlServer1_password')]"
+					},
+					"ls_SqlServer2_password": {
+						"value": "[parameters('ls_SqlServer2_password')]"
+					},
+					"ls_onprem_sql_accountKey": {
+						"value": "[parameters('ls_onprem_sql_accountKey')]"
 					},
 					"SqlServer1_properties_typeProperties_server": {
 						"value": "[parameters('SqlServer1_properties_typeProperties_server')]"
@@ -215,24 +247,6 @@
 					},
 					"ls_onprem_sql_properties_typeProperties_url": {
 						"value": "[parameters('ls_onprem_sql_properties_typeProperties_url')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "adfmigrationproj1_ArmTemplate_1",
-			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2024-03-01",
-			"properties": {
-				"mode": "incremental",
-				"templateLink": {
-					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
-					"contentVersion": "1.0.0.0"
-				},
-				"parameters": {
-					"factoryName": {
-						"value": "[parameters('factoryName')]"
 					}
 				}
 			},
